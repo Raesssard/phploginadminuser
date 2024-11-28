@@ -1,123 +1,110 @@
 <?php
 session_start();
-if (!isset($_SESSION['email']) || $_SESSION['role'] !== 'user') {
-    header("Location: index.php");
+
+// Periksa apakah user sudah login
+if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'user') {
+    header("Location: login.php");
     exit();
 }
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
-    <title>User Dashboard</title>
-    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard User</title>
+    <!-- Menyertakan Bootstrap CSS dari CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        * {
+        body {
+            background: linear-gradient(135deg, #000000, #001f3f);
+            font-family: Arial, sans-serif;
+            color: #ffffff;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
-            font-family: 'Arial', sans-serif;
         }
 
-        body {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-            background: url('mantap.jpeg') no-repeat center center fixed; /* Gambar kucing lucu */
-            background-size: cover;
-            padding: 20px;
-            font-family: Arial, sans-serif;
+        .navbar {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .navbar .nav-link {
+            color: #ffffff;
+            font-weight: bold;
+        }
+
+        .navbar .nav-link:hover {
+            color: #007bff;
         }
 
         .container {
-            width: 100%;
-            max-width: 400px;
-            background: rgba(255, 255, 255, 0.9); /* Transparan agar latar belakang tetap terlihat */
-            padding: 40px;
-            border-radius: 10px;
-            box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.1);
-            text-align: center;
+            margin-top: 50px;
         }
 
-        .login-text {
-            font-size: 2rem;
-            font-weight: 700;
-            color: #333;
-            margin-bottom: 20px;
-        }
-
-        .login-email {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .input-group {
-            margin-bottom: 15px;
-            position: relative;
-        }
-
-        .input-group input {
-            width: 100%;
-            padding: 12px 15px;
-            font-size: 1rem;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            background: #f7f7f7;
-            outline: none;
-            transition: all 0.3s ease;
-        }
-
-        .input-group input:focus {
-            border-color: #4c6ef5;
-        }
-
-        .btn {
-            background-color: #4c6ef5;
-            color: white;
+        .card {
+            background: rgba(255, 255, 255, 0.1);
             border: none;
-            padding: 12px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 1.2rem;
-            transition: background-color 0.3s ease;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            color: #ffffff;
         }
 
-        .btn:hover {
-            background-color: #357ae8;
+        .card:hover {
+            transform: scale(1.02);
+            transition: 0.3s ease-in-out;
         }
 
-        .login-register-text {
-            margin-top: 15px;
-            font-size: 1rem;
+        .btn-primary {
+            background-color: #007bff;
+            border: none;
         }
 
-        .login-register-text a {
-            color: #4c6ef5;
-            text-decoration: none;
-        }
-
-        .login-register-text a:hover {
-            text-decoration: underline;
-        }
-
-        /* Responsif */
-        @media (max-width: 768px) {
-            body {
-                padding: 10px;
-            }
-
-            .container {
-                padding: 30px;
-                width: 90%;
-            }
+        .btn-primary:hover {
+            background-color: #0056b3;
         }
     </style>
 </head>
+
 <body>
-    <h2>Welcome to User Dashboard, <?php echo $_SESSION['email']; ?>!</h2>
-    <p>Ini adalah halaman khusus pengguna biasa.</p>
-    <a href="logout.php">Logout</a>
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="dashboard_user.php">Dashboard User</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="tabel_buku_user.php">Tabel Buku</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="d-flex">
+                <a href="logout.php" class="btn btn-danger">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card p-3 mb-4">
+                    <h5 class="card-title">Dashboard User</h5>
+                    <p class="card-text">Kembali ke halaman utama Dashboard User.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card p-3 mb-4">
+                    <h5 class="card-title">Tabel Buku</h5>
+                    <p class="card-text">Lihat data buku</p>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
+
 </html>

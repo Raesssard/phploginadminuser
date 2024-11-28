@@ -1,11 +1,16 @@
 <?php
 session_start();
+include 'db.php'; // Pastikan koneksi database sudah benar
 
 // Periksa apakah admin sudah login
 if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
     header("Location: login.php");
     exit();
 }
+
+// Query untuk mengambil data pengguna dari tabel user_admin_plain (dengan password asli)
+$query = "SELECT id, email, password, role FROM user_admin_plain";
+$result = $conn->query($query);
 ?>
 
 <!DOCTYPE html>
@@ -13,7 +18,7 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Admin</title>
+    <title>Data Pengguna</title>
     <!-- Menyertakan Bootstrap CSS dari CDN -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
@@ -39,16 +44,25 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
         .container {
             margin-top: 50px;
         }
-        .card {
+        .table-container {
             background: rgba(255, 255, 255, 0.1);
-            border: none;
+            padding: 20px;
             border-radius: 10px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+        .table {
+            color: #ffffff;
+            background: rgba(255, 255, 255, 0.05);
+            border-collapse: collapse;
+        }
+        .table th {
+            background: rgba(255, 255, 255, 0.2);
             color: #ffffff;
         }
-        .card:hover {
-            transform: scale(1.02);
-            transition: 0.3s ease-in-out;
+        .table th, .table td {
+            padding: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            text-align: center;
         }
         .btn-primary {
             background-color: #007bff;
@@ -57,10 +71,17 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
         .btn-primary:hover {
             background-color: #0056b3;
         }
+        .btn-add-user {
+            background-color: #28a745;
+            border: none;
+        }
+        .btn-add-user:hover {
+            background-color: #1e7e34;
+        }
     </style>
 </head>
 <body>
-<nav class="navbar navbar-expand-lg navbar-dark">
+    <nav class="navbar navbar-expand-lg navbar-dark">
         <div class="container-fluid">
             <a class="navbar-brand" href="dashboard_admin.php">Dashboard Admin</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
@@ -82,26 +103,43 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
         </div>
     </nav>
     <div class="container">
-        <div class="row">
-            <div class="col-md-4">
-                <div class="card p-3 mb-4">
-                    <h5 class="card-title">Dashboard Admin</h5>
-                    <p class="card-text">Kembali ke halaman utama Dashboard Admin.</p>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card p-3 mb-4">
-                    <h5 class="card-title">Data Pengguna</h5>
-                    <p class="card-text">Kelola daftar user dan admin pada sistem.</p>
+        <h2 class="text-center mb-4">Data Pengguna</h2>
+        <div class="table-container">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Email</th>
+                        <th>Password (Asli)</th> <!-- Menampilkan password asli -->
+                        <th>Role</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+    <?php
+    if ($result->num_rows > 0) {
+        // Menampilkan data pengguna dari hasil query
+        while ($row = $result->fetch_assoc()) {
+            echo "<tr>
+                    <td>{$row['id']}</td>
+                    <td>{$row['email']}</td>
+                    <td>{$row['password']}</td> <!-- Menampilkan password asli -->
+                    <td>{$row['role']}</td>
+                    <td>
+                        <a href='edit_user.php?id={$row['id']}' class='btn btn-primary btn-sm'>Edit</a>
+                        <a href='delete_user.php?id={$row['id']}' class='btn btn-danger btn-sm' onclick='return confirm(\"Yakin ingin menghapus data ini?\")'>Delete</a>
+                    </td>
+                  </tr>";
+        }
+    } else {
+        echo "<tr><td colspan='5'>Tidak ada data pengguna.</td></tr>";
+    }
+    ?>
+</tbody>
 
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card p-3 mb-4">
-                    <h5 class="card-title">Tabel Buku</h5>
-                    <p class="card-text">Lihat dan kelola data buku yang tersedia.</p>
-                    
-                </div>
+            </table>
+            <div class="d-flex justify-content-start mt-3">
+                <a href="tambah_user.php" class="btn btn-add-user">Tambah User</a>
             </div>
         </div>
     </div>

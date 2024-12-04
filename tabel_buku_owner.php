@@ -3,7 +3,7 @@ session_start();
 include 'db.php'; // Pastikan koneksi database sudah benar
 
 // Periksa apakah user sudah login
-if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'user') {
+if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'owner') {
     header("Location: login.php");
     exit();
 }
@@ -127,11 +127,14 @@ body {
 <body>
 <nav class="navbar navbar-expand-lg navbar-dark">
     <div class="container-fluid">
-        <a class="navbar-brand" href="dashboard_user.php">Dashboard User</a>
+        <a class="navbar-brand" href="dashboard_owner.php">Dashboard Owner</a>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav">
+            <li class="nav-item">
+                        <a class="nav-link" href="data_pengguna_owner.php">Data Pengguna</a>
+                    </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="tabel_buku_user.php">Tabel Buku</a>
+                    <a class="nav-link" href="tabel_buku_owner.php">Tabel Buku</a>
                 </li>
             </ul>
         </div>

@@ -8,6 +8,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $password = $_POST['password'];
 
     if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        // Query untuk mencari pengguna berdasarkan email
         $stmt = $conn->prepare("SELECT email, password, role FROM user_admin WHERE email = ?");
         $stmt->bind_param("s", $email);
         $stmt->execute();
@@ -16,12 +17,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         if ($result->num_rows > 0) {
             $user = $result->fetch_assoc();
 
+            // Validasi password
             if (hash('sha512', $password) === $user['password']) {
                 $_SESSION['email'] = $user['email'];
                 $_SESSION['role'] = $user['role'];
 
+                // Arahkan ke dashboard sesuai role
                 if ($user['role'] === 'admin') {
                     header("Location: dashboard_admin.php");
+                } elseif ($user['role'] === 'owner') {
+                    header("Location: dashboard_owner.php");
                 } else {
                     header("Location: dashboard_user.php");
                 }
@@ -38,6 +43,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 }
 
 ?>
+
+
 
 
 <!DOCTYPE html>
